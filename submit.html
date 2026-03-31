@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>בית הבוטים — הגשת כלי חדש</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--blue-deep:#2B59C3;--blue-mid:#3B7DDD;--blue-bright:#4A9AF5;--teal:#00BFA6;--teal-light:#26D9C1;--cyan:#00C9DB;--purple:#6C5CE7;--purple-light:#8B7CF6;--grad-main:linear-gradient(135deg,#6C5CE7 0%,#2B59C3 40%,#00BFA6 100%);--grad-header:linear-gradient(135deg,#1E1B4B 0%,#1E3A5F 50%,#0F4C5C 100%);--grad-btn:linear-gradient(135deg,#2B59C3,#00BFA6);--grad-btn-hover:linear-gradient(135deg,#6C5CE7,#4A9AF5);--bg-primary:#F4F7FC;--bg-card:#FFF;--text-primary:#1A1F36;--text-secondary:#525F7F;--text-light:#8898AA;--border:#E3E8F0;--shadow-glow:0 4px 20px rgba(107,92,231,0.2);--radius:16px;--radius-sm:10px}
@@ -37,7 +38,46 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238898AA' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:36px;cursor:pointer}
 .form-group input[dir="ltr"]{text-align:left;direction:ltr}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+@media(max-width:600px){
+.form-row{grid-template-columns:1fr}
+.header-inner{padding:10px 14px}
+.logo{gap:10px}
+.logo-icon{width:38px;height:38px;font-size:20px;border-radius:10px}
+.logo-text{font-size:17px}
+.logo-sub{font-size:10px}
+.back-link{font-size:12px}
+.page-container{padding:24px 14px 40px}
+.page-hero{margin-bottom:24px}
+.page-hero h1{font-size:26px}
+.page-hero p{font-size:14px;padding:0 4px}
+.page-hero .badge{font-size:12px;padding:5px 12px}
+.form-card{padding:20px 16px;border-radius:14px}
+.form-section{margin-bottom:22px}
+.form-section-title{font-size:15px;gap:6px}
+.form-section-title .num{width:24px;height:24px;font-size:12px}
+.form-group{margin-bottom:14px}
+.form-group label{font-size:13px}
+.form-group input,.form-group textarea,.form-group select{padding:10px 12px;font-size:14px}
+.url-scan-row{flex-direction:column;gap:8px}
+.url-scan-row input{width:100%}
+.btn-scan{width:100%;justify-content:center;padding:11px}
+.emoji-picker{gap:6px}
+.emoji-option{width:40px;height:40px;font-size:20px;border-radius:10px}
+.tags-input{gap:6px}
+.tag-option{padding:5px 12px;font-size:12px}
+.btn-submit{padding:12px;font-size:15px}
+.preview-card{padding:14px}
+.preview-inner{padding:14px;gap:10px}
+.preview-icon{width:42px;height:42px;font-size:22px}
+.preview-name{font-size:15px}
+.preview-desc{font-size:12px}
+.success-icon{width:64px;height:64px;font-size:32px}
+.success-state h2{font-size:20px}
+.success-state p{font-size:14px}
+.btn-another{padding:10px 22px;font-size:13px}
+.ai-badge{font-size:10px;padding:2px 6px}
+.toast{font-size:13px;padding:10px 20px}
+}
 .url-scan-row{display:flex;gap:10px;align-items:flex-start}
 .url-scan-row input{flex:1}
 .btn-scan{padding:12px 20px;border-radius:var(--radius-sm);border:none;background:var(--grad-main);color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s;white-space:nowrap;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(107,92,231,0.2)}
@@ -128,7 +168,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
         <div class="form-group"><label>שם הכלי</label><input type="text" id="f-name" placeholder="למשל: חדר בריחה — יציאת מצרים"></div>
         <div class="form-group"><label>סוג הכלי</label><select id="f-type"><option value="">בחר/י...</option><option value="בוט">בוט</option><option value="אפליקציה">אפליקציה</option><option value="סוכן">סוכן</option><option value="לומדה">לומדה</option><option value="משחק">משחק</option><option value="חדר בריחה">חדר בריחה</option><option value="אתר">אתר</option><option value="כלי AI">כלי AI</option><option value="אחר">אחר</option></select></div>
       </div>
-      <div class="form-group"><label>תיאור <span class="hint">(2-3 משפטים)</span></label><textarea id="f-desc" placeholder="מה הכלי עושה? למי הוא מתאים? מה מיוחד בו?"></textarea></div>
+      <div class="form-group"><label>מהי מטרת הכלי? <span class="hint">(משפט אחד או שניים)</span></label><textarea id="f-purpose" rows="2" placeholder="למשל: עוזר לתלמידים לתרגל אוצר מילים באנגלית בצורה אינטראקטיבית"></textarea></div>
+      <div class="form-group"><label>איך משתמשים בו? <span class="hint">(משפט אחד או שניים)</span></label><textarea id="f-usage" rows="2" placeholder="למשל: התלמיד נכנס לקישור, בוחר נושא, ועונה על חידון. המורה מקבל דוח התקדמות"></textarea></div>
       <div class="form-group"><label>בחר/י אייקון</label>
         <div class="emoji-picker" id="emojiPicker">
           <div class="emoji-option" data-emoji="🤖">🤖</div><div class="emoji-option" data-emoji="🏛️">🏛️</div><div class="emoji-option" data-emoji="📚">📚</div><div class="emoji-option" data-emoji="✍️">✍️</div><div class="emoji-option" data-emoji="🧮">🧮</div><div class="emoji-option" data-emoji="🎯">🎯</div><div class="emoji-option" data-emoji="🎮">🎮</div><div class="emoji-option" data-emoji="🧩">🧩</div><div class="emoji-option" data-emoji="🔬">🔬</div><div class="emoji-option" data-emoji="🌍">🌍</div><div class="emoji-option" data-emoji="🎨">🎨</div><div class="emoji-option" data-emoji="💬">💬</div><div class="emoji-option" data-emoji="📝">📝</div><div class="emoji-option" data-emoji="🕵️">🕵️</div><div class="emoji-option" data-emoji="⚡">⚡</div><div class="emoji-option" data-emoji="🌹">🌹</div>
@@ -158,8 +199,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
   </div>
   <div class="form-card success-state" id="successState">
     <div class="success-icon">🎉</div>
-    <h2>הכלי נשלח בהצלחה!</h2>
-    <p>תודה על השיתוף! הכלי שלך יעבור בדיקה ויופיע בקטלוג לאחר אישור.</p>
+    <h2>הכלי שלך נשלח בהצלחה!</h2>
+    <p>הכלי שלך נשלח למנהלי בית הבוטים וממתין לאישור שלהם. נעדכן אותך כשהכלי יעלה לקטלוג.</p>
     <button class="btn-another" onclick="resetForm()">📬 הגשת כלי נוסף</button>
   </div>
 </div>
@@ -182,7 +223,7 @@ document.querySelectorAll('.emoji-option').forEach(el=>{
 document.querySelectorAll('.tag-option').forEach(el=>{
   el.addEventListener('click',()=>{if(el.classList.contains('selected')){el.classList.remove('selected');selectedTags=selectedTags.filter(t=>t!==el.dataset.tag)}else{if(selectedTags.length>=4){showToast('עד 4 תגיות');return}el.classList.add('selected');selectedTags.push(el.dataset.tag)}})
 });
-['f-name','f-author','f-desc','f-type'].forEach(id=>{document.getElementById(id)?.addEventListener('input',updatePreview)});
+['f-name','f-author','f-purpose','f-usage','f-type'].forEach(id=>{document.getElementById(id)?.addEventListener('input',updatePreview)});
 
 function selectEmoji(emoji){
   selectedEmoji=emoji;
@@ -224,7 +265,8 @@ window.scanUrl=async function(){
     // Fill in the form
     if(parsed.name)document.getElementById('f-name').value=parsed.name;
     if(parsed.type)setSelectValue('f-type',parsed.type);
-    if(parsed.desc)document.getElementById('f-desc').value=parsed.desc;
+    if(parsed.purpose)document.getElementById('f-purpose').value=parsed.purpose;
+    if(parsed.usage)document.getElementById('f-usage').value=parsed.usage;
     if(parsed.age)setSelectValue('f-age',parsed.age);
     if(parsed.subject)setSelectValue('f-subject',parsed.subject);
     if(parsed.emoji)selectEmoji(parsed.emoji);
@@ -246,10 +288,21 @@ window.scanUrl=async function(){
 function updatePreview(){
   const name=document.getElementById('f-name')?.value.trim();
   const author=document.getElementById('f-author')?.value.trim();
-  const desc=document.getElementById('f-desc')?.value.trim();
+  const purpose=document.getElementById('f-purpose')?.value.trim();
+  const usage=document.getElementById('f-usage')?.value.trim();
   const type=document.getElementById('f-type')?.value;
   const card=document.getElementById('previewCard');
-  if(name||desc){card.style.display='block';document.getElementById('previewName').textContent=name?(name+(type?' ('+type+')':'')):' שם הכלי';document.getElementById('previewAuthor').textContent=author||'שם היוצר';document.getElementById('previewDesc').textContent=desc||'תיאור הכלי יופיע כאן...';document.getElementById('previewIcon').textContent=selectedEmoji||'🤖'}else{card.style.display='none'}
+  if(name||purpose||usage){
+    card.style.display='block';
+    document.getElementById('previewName').textContent=name?(name+(type?' ('+type+')':'')):' שם הכלי';
+    document.getElementById('previewAuthor').textContent=author||'שם היוצר';
+    let descText='';
+    if(purpose)descText+='🎯 '+purpose;
+    if(usage)descText+=(descText?'\n':'')+' 📋 '+usage;
+    document.getElementById('previewDesc').textContent=descText||'תיאור הכלי יופיע כאן...';
+    document.getElementById('previewDesc').style.whiteSpace='pre-line';
+    document.getElementById('previewIcon').textContent=selectedEmoji||'🤖';
+  }else{card.style.display='none'}
 }
 
 function showToast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500)}
@@ -257,7 +310,8 @@ function showToast(m){const e=document.getElementById('toast');e.textContent=m;e
 window.submitForm=async function(){
   const name=document.getElementById('f-name')?.value.trim();
   const url=document.getElementById('f-url')?.value.trim();
-  const desc=document.getElementById('f-desc')?.value.trim();
+  const purpose=document.getElementById('f-purpose')?.value.trim();
+  const usage=document.getElementById('f-usage')?.value.trim();
   const author=document.getElementById('f-author')?.value.trim();
   const email=document.getElementById('f-email')?.value.trim();
   const age=document.getElementById('f-age')?.value;
@@ -266,7 +320,8 @@ window.submitForm=async function(){
   if(!name){showToast('נא להזין שם לכלי');return}
   if(!type){showToast('נא לבחור סוג כלי');return}
   if(!url){showToast('נא להזין קישור');return}
-  if(!desc){showToast('נא להזין תיאור');return}
+  if(!purpose){showToast('נא לתאר את מטרת הכלי');return}
+  if(!usage){showToast('נא לתאר איך משתמשים בכלי');return}
   if(!author){showToast('נא להזין את שמך');return}
   if(!email){showToast('נא להזין מייל');return}
   if(!age){showToast('נא לבחור גיל יעד');return}
@@ -275,12 +330,24 @@ window.submitForm=async function(){
   btn.disabled=true;btn.textContent='שולח...';
   try{
     await addDoc(collection(db,'apps'),{
-      name:name+(type?' ('+type+')':''),author,desc,url,
+      name:name+(type?' ('+type+')':''),author,purpose,usage,url,
       icon:selectedEmoji||'🤖',color:'#EDE9FE',tags:selectedTags,
       age,subject,takes:0,comments:[],status:'pending',
       email,role:document.getElementById('f-role')?.value.trim()||'',
       submittedAt:new Date().toISOString()
     });
+    // Send email notification
+    try{
+      emailjs.init('1BXDYsn3l8dYS5u7Q');
+      await emailjs.send('service_ugnx7wk','template_4jdowh',{
+        tool_name:name+(type?' ('+type+')':''),
+        author_name:author,
+        author_email:email,
+        tool_url:url,
+        tool_purpose:purpose,
+        tool_usage:usage
+      });
+    }catch(emailErr){console.error('Email error:',emailErr)}
     document.getElementById('formCard').style.display='none';
     document.getElementById('successState').classList.add('show');
     showToast('🎉 הכלי נשלח בהצלחה!');
@@ -293,7 +360,7 @@ window.submitForm=async function(){
 window.resetForm=function(){
   document.getElementById('formCard').style.display='block';
   document.getElementById('successState').classList.remove('show');
-  ['f-name','f-url','f-desc','f-author','f-email','f-role'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['f-name','f-url','f-purpose','f-usage','f-author','f-email','f-role'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('f-age').value='';document.getElementById('f-subject').value='';document.getElementById('f-type').value='';
   selectedEmoji='';selectedTags=[];
   document.querySelectorAll('.emoji-option').forEach(e=>e.classList.remove('selected'));
