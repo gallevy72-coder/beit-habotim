@@ -61,6 +61,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .card-title{font-family:'Rubik',sans-serif;font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
 .card-author{font-size:13px;color:var(--text-light)}
 .card-desc{font-size:14.5px;color:var(--text-secondary);line-height:1.75;margin-bottom:14px}
+.card-purpose,.card-usage{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:6px}
+.card-purpose strong,.card-usage strong{color:var(--text-primary);font-weight:600;font-size:12.5px}
 .card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .tag{padding:3px 11px;border-radius:100px;font-size:12px;font-weight:500}
 .tag.default{background:linear-gradient(135deg,rgba(107,92,231,0.08),rgba(59,125,221,0.08));color:#2B59C3}
@@ -126,8 +128,57 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .loading{text-align:center;padding:60px;color:var(--text-light);font-size:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--grad-header);color:#fff;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:500;box-shadow:0 8px 32px rgba(30,27,75,0.25);z-index:300;transition:transform .35s cubic-bezier(.4,0,.2,1);pointer-events:none;border:1px solid rgba(255,255,255,0.1)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-@media(max-width:768px){.hero h1{font-size:30px}.apps-grid{grid-template-columns:1fr}.stats-bar{gap:20px}.header-inner{padding:12px 16px}.hero{padding:36px 16px 16px}.logo-text{font-size:19px}.pending-card{flex-direction:column}.pending-actions{align-self:flex-start}}
+@media(max-width:768px){
+.hero h1{font-size:26px}
+.hero p{font-size:15px;padding:0 8px}
+.hero{padding:28px 16px 12px}
+.hero-badge{font-size:12px;padding:5px 12px}
+.apps-grid{grid-template-columns:1fr;gap:14px}
+.grid-section{padding:8px 14px 40px}
+.stats-bar{gap:16px}
+.stat-num{font-size:24px}
+.stat-label{font-size:12px}
+.header-inner{padding:10px 14px;flex-wrap:wrap;gap:8px}
+.logo{gap:10px}
+.logo-icon{width:38px;height:38px;font-size:20px;border-radius:10px}
+.logo-text{font-size:17px}
+.logo-sub{font-size:10px}
+.hotam-logo{height:26px;margin-right:8px;padding-right:8px}
+.header-actions{gap:6px;flex-wrap:wrap}
+.btn-login{padding:7px 14px;font-size:13px}
+.btn-admin{padding:7px 12px;font-size:12px}
+.btn-submit-link{padding:7px 12px;font-size:12px}
+.user-badge{padding:5px 10px 5px 8px;font-size:13px}
+.user-badge .avatar{width:26px;height:26px;font-size:11px}
+.filters-section{padding:12px 14px 0}
+.filters-group{margin-bottom:8px}
+.filters-row{gap:6px}
+.filter-btn{padding:6px 14px;font-size:13px}
+.card-top{padding:18px 16px 12px}
+.card-icon{width:44px;height:44px;font-size:22px;border-radius:12px}
+.card-title{font-size:16px}
+.card-desc,.card-purpose,.card-usage{font-size:13.5px}
+.card-tags{gap:5px}
+.tag{font-size:11px;padding:2px 8px}
+.card-bottom{padding:12px 16px}
+.btn-take{padding:10px;font-size:13px}
+.btn-comment{padding:10px 12px;font-size:13px}
+.modal{max-width:calc(100vw - 32px);margin:16px}
+.modal-header{padding:18px 18px 0}
+.modal-header h2{font-size:17px}
+.modal-body{padding:16px 18px 18px}
+.admin-panel{padding:20px 14px 40px}
+.admin-panel h2{font-size:20px}
+.admin-table th,.admin-table td{padding:10px 10px;font-size:12px}
+.pending-card{flex-direction:column;padding:14px}
+.pending-actions{align-self:flex-start;margin-top:8px}
+.pending-name{font-size:14px}
+.pending-desc{font-size:12px}
+.count-badge{font-size:12px;min-width:28px;padding:3px 8px}
+.toast{font-size:13px;padding:10px 20px}
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 <div id="app"><div class="loading">⏳ טוען את בית הבוטים...</div></div>
@@ -187,7 +238,14 @@ function renderCatalog(){
 function renderCard(a){
   const comments=a.comments||[];
   const tags=a.tags||[];
-  return '<div class="app-card"><div class="card-top"><div class="card-header"><div class="card-icon" style="background:'+(a.color||'#EDE9FE')+'">'+a.icon+'</div><div class="card-title-area"><div class="card-title">'+a.name+'</div><div class="card-author">'+a.author+'</div></div></div><div class="card-desc">'+a.desc+'</div><div class="card-tags"><span class="tag age">'+(a.age||'')+'</span><span class="tag subject">'+(a.subject||'')+'</span>'+tags.map(t=>'<span class="tag default">'+t+'</span>').join('')+'</div><div class="card-meta"><div class="meta-item">🔗 '+(a.takes||0)+' לקיחות</div><div class="meta-item">💬 '+comments.length+' הערות</div></div></div><div class="card-bottom"><button class="btn-take" data-id="'+a.id+'">🚀 קח אותי לאפליקציה</button><button class="btn-comment" data-id="'+a.id+'">💬 '+comments.length+'</button></div></div>';
+  let descHTML='';
+  if(a.purpose||a.usage){
+    if(a.purpose)descHTML+='<div class="card-purpose"><strong>🎯 מטרה:</strong> '+a.purpose+'</div>';
+    if(a.usage)descHTML+='<div class="card-usage"><strong>📋 שימוש:</strong> '+a.usage+'</div>';
+  }else if(a.desc){
+    descHTML='<div class="card-desc">'+a.desc+'</div>';
+  }
+  return '<div class="app-card"><div class="card-top"><div class="card-header"><div class="card-icon" style="background:'+(a.color||'#EDE9FE')+'">'+a.icon+'</div><div class="card-title-area"><div class="card-title">'+a.name+'</div><div class="card-author">'+a.author+'</div></div></div>'+descHTML+'<div class="card-tags"><span class="tag age">'+(a.age||'')+'</span><span class="tag subject">'+(a.subject||'')+'</span>'+tags.map(t=>'<span class="tag default">'+t+'</span>').join('')+'</div><div class="card-meta"><div class="meta-item">🔗 '+(a.takes||0)+' לקיחות</div><div class="meta-item">💬 '+comments.length+' הערות</div></div></div><div class="card-bottom"><button class="btn-take" data-id="'+a.id+'">🚀 קח אותי לאפליקציה</button><button class="btn-comment" data-id="'+a.id+'">💬 '+comments.length+'</button></div></div>';
 }
 
 function renderAdmin(){
@@ -252,7 +310,18 @@ function attachEvents(){
     const id=b.dataset.approve;
     await updateDoc(doc(db,'apps',id),{status:'approved'});
     const a=state.apps.find(x=>x.id===id);if(a)a.status='approved';
-    render();showToast('✅ אושר!')
+    // Send approval email to submitter
+    if(a&&a.email){
+      try{
+        emailjs.init('1BXDYsn3l8dYS5u7Q');
+        await emailjs.send('service_ugnx7wk','template_olx1tjp',{
+          tool_name:a.name,
+          author_name:a.author,
+          author_email:a.email
+        });
+      }catch(emailErr){console.error('Approval email error:',emailErr)}
+    }
+    render();showToast('✅ אושר! המגיש קיבל הודעה במייל')
   }));
   document.querySelectorAll('[data-reject]').forEach(b=>b.addEventListener('click',async()=>{
     if(!confirm('למחוק את ההגשה הזו?'))return;
