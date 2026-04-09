@@ -53,6 +53,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .app-card:hover{box-shadow:0 12px 40px rgba(30,27,75,0.12);transform:translateY(-4px);border-color:rgba(107,92,231,0.3)}
 .app-card:hover::before{opacity:1}
 .card-top{padding:24px 24px 16px;flex:1}
+.card-image{width:100%;height:180px;object-fit:cover;border-bottom:1px solid var(--border)}
+.card-image-placeholder{width:100%;height:120px;background:linear-gradient(135deg,rgba(107,92,231,0.05),rgba(0,191,166,0.05));display:flex;align-items:center;justify-content:center;font-size:48px;border-bottom:1px solid var(--border)}
 .card-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
 .card-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
 .card-title-area{flex:1;min-width:0}
@@ -243,7 +245,11 @@ function renderCard(a){
   }else if(a.desc){
     descHTML='<div class="card-desc">'+a.desc+'</div>';
   }
-  return '<div class="app-card"><div class="card-top"><div class="card-header"><div class="card-icon" style="background:'+(a.color||'#EDE9FE')+'">'+a.icon+'</div><div class="card-title-area"><div class="card-title">'+a.name+'</div><div class="card-author">'+a.author+'</div></div></div>'+descHTML+'<div class="card-tags"><span class="tag age">'+(a.age||'')+'</span><span class="tag subject">'+(a.subject||'')+'</span>'+tags.map(t=>'<span class="tag default">'+t+'</span>').join('')+'</div><div class="card-meta"><div class="meta-item">🔗 '+(a.takes||0)+' לקיחות</div><div class="meta-item">💬 '+comments.length+' הערות</div></div></div><div class="card-bottom"><button class="btn-take" data-id="'+a.id+'">🚀 קח אותי לאפליקציה</button><button class="btn-comment" data-id="'+a.id+'">💬 '+comments.length+'</button></div></div>';
+  let imageHTML='';
+  if(a.image&&a.image.length>10){
+    imageHTML='<img class="card-image" src="'+a.image+'" alt="'+a.name+'" onerror="this.style.display=\'none\'">';
+  }
+  return '<div class="app-card">'+imageHTML+'<div class="card-top"><div class="card-header"><div class="card-icon" style="background:'+(a.color||'#EDE9FE')+'">'+a.icon+'</div><div class="card-title-area"><div class="card-title">'+a.name+'</div><div class="card-author">'+a.author+'</div></div></div>'+descHTML+'<div class="card-tags"><span class="tag age">'+(a.age||'')+'</span><span class="tag subject">'+(a.subject||'')+'</span>'+tags.map(t=>'<span class="tag default">'+t+'</span>').join('')+'</div><div class="card-meta"><div class="meta-item">🔗 '+(a.takes||0)+' לקיחות</div><div class="meta-item">💬 '+comments.length+' הערות</div></div></div><div class="card-bottom"><button class="btn-take" data-id="'+a.id+'">🚀 קח אותי לאפליקציה</button><button class="btn-comment" data-id="'+a.id+'">💬 '+comments.length+'</button></div></div>';
 }
 
 function renderAdmin(){
