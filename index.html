@@ -130,6 +130,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .btn-approve:hover{background:var(--grad-btn-hover);box-shadow:var(--shadow-glow)}
 .btn-reject{padding:8px 16px;border-radius:var(--radius-sm);border:1.5px solid #FCA5A5;background:#FFF;color:#DC2626;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
 .btn-reject:hover{background:#FEF2F2}
+.btn-delete{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;font-size:14px;transition:all .2s}
+.btn-delete:hover{background:#FEF2F2;border-color:#FCA5A5}
 .loading{text-align:center;padding:60px;color:var(--text-light);font-size:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--grad-header);color:#fff;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:500;box-shadow:0 8px 32px rgba(30,27,75,0.25);z-index:300;transition:transform .35s cubic-bezier(.4,0,.2,1);pointer-events:none;border:1px solid rgba(255,255,255,0.1)}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -264,7 +266,7 @@ function renderAdmin(){
   if(pending.length>0){
     pendingHTML='<div class="pending-section"><h3>⏳ ממתינים לאישור <span class="pending-count">'+pending.length+'</span></h3>'+pending.map(a=>'<div class="pending-card"><div class="pending-icon">'+a.icon+'</div><div class="pending-info"><div class="pending-name">'+a.name+'</div><div class="pending-meta">מאת '+a.author+' · '+(a.age||'')+' · '+(a.subject||'')+(a.email?' · '+a.email:'')+'</div><div class="pending-desc">'+a.desc+'</div><a class="pending-link" href="'+a.url+'" target="_blank">'+a.url+'</a></div><div class="pending-actions"><button class="btn-approve" data-approve="'+a.id+'">✅ אישור</button><button class="btn-reject" data-reject="'+a.id+'">❌ דחייה</button></div></div>').join('')+'</div>';
   }
-  return '<div class="admin-panel"><h2>📊 דשבורד מנהל — בית הבוטים</h2>'+pendingHTML+'<h3 style="font-family:Rubik,sans-serif;font-size:18px;margin-bottom:16px">📋 כלים מאושרים ('+approved.length+')</h3><table class="admin-table"><thead><tr><th>#</th><th>שם הכלי</th><th>תחום</th><th>גיל</th><th>לקיחות</th><th>הערות</th></tr></thead><tbody>'+approved.map((a,i)=>'<tr><td>'+(i+1)+'</td><td><strong>'+a.icon+' '+a.name+'</strong><br><span style="color:var(--text-light);font-size:12px">'+a.author+'</span></td><td>'+(a.subject||'')+'</td><td>'+(a.age||'')+'</td><td><span class="count-badge takes">'+(a.takes||0)+'</span></td><td><span class="count-badge comments">'+(a.comments?a.comments.length:0)+'</span></td></tr>').join('')+'</tbody></table></div>';
+  return '<div class="admin-panel"><h2>📊 דשבורד מנהל — בית הבוטים</h2>'+pendingHTML+'<h3 style="font-family:Rubik,sans-serif;font-size:18px;margin-bottom:16px">📋 כלים מאושרים ('+approved.length+')</h3><table class="admin-table"><thead><tr><th>#</th><th>שם הכלי</th><th>תחום</th><th>גיל</th><th>לקיחות</th><th>הערות</th><th>פעולות</th></tr></thead><tbody>'+approved.map((a,i)=>'<tr><td>'+(i+1)+'</td><td><strong>'+a.icon+' '+a.name+'</strong><br><span style="color:var(--text-light);font-size:12px">'+a.author+'</span></td><td>'+(a.subject||'')+'</td><td>'+(a.age||'')+'</td><td><span class="count-badge takes">'+(a.takes||0)+'</span></td><td><span class="count-badge comments">'+(a.comments?a.comments.length:0)+'</span></td><td><button class="btn-delete" data-delete="'+a.id+'">🗑️</button></td></tr>').join('')+'</tbody></table></div>';
 }
 
 function renderModal(){
@@ -344,6 +346,13 @@ function attachEvents(){
     await deleteDoc(doc(db,'apps',id));
     state.apps=state.apps.filter(x=>x.id!==id);
     render();showToast('❌ נדחה')
+  }));
+  document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',async()=>{
+    if(!confirm('האם למחוק את הכלי הזה מהקטלוג?'))return;
+    const id=b.dataset.delete;
+    await deleteDoc(doc(db,'apps',id));
+    state.apps=state.apps.filter(x=>x.id!==id);
+    render();showToast('🗑️ הכלי נמחק')
   }));
 }
 
