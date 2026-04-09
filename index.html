@@ -63,6 +63,11 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .card-desc{font-size:14.5px;color:var(--text-secondary);line-height:1.75;margin-bottom:14px}
 .card-purpose,.card-usage{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:6px}
 .card-purpose strong,.card-usage strong{color:var(--text-primary);font-weight:600;font-size:12.5px}
+.card-usage-toggle{margin-bottom:6px}
+.btn-usage-toggle{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 14px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;color:var(--purple);cursor:pointer;transition:all .2s;width:100%;text-align:right}
+.btn-usage-toggle:hover{background:rgba(107,92,231,0.04);border-color:var(--purple-light)}
+.btn-usage-toggle.open{border-color:var(--purple-light);background:rgba(107,92,231,0.04)}
+.card-usage-content{padding:10px 14px;margin-top:6px;font-size:13.5px;color:var(--text-secondary);line-height:1.7;background:var(--bg-primary);border-radius:var(--radius-sm);border-right:3px solid var(--teal)}
 .card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .tag{padding:3px 11px;border-radius:100px;font-size:12px;font-weight:500}
 .tag.default{background:linear-gradient(135deg,rgba(107,92,231,0.08),rgba(59,125,221,0.08));color:#2B59C3}
@@ -241,7 +246,7 @@ function renderCard(a){
   let descHTML='';
   if(a.purpose||a.usage){
     if(a.purpose)descHTML+='<div class="card-purpose"><strong>🎯 מטרה:</strong> '+a.purpose+'</div>';
-    if(a.usage)descHTML+='<div class="card-usage"><strong>📋 שימוש:</strong> '+a.usage+'</div>';
+    if(a.usage)descHTML+='<div class="card-usage-toggle"><button class="btn-usage-toggle" data-usage="'+a.id+'">📋 הנחיות שימוש ▾</button><div class="card-usage-content" id="usage-'+a.id+'" style="display:none"><strong>📋 שימוש:</strong> '+a.usage+'</div></div>';
   }else if(a.desc){
     descHTML='<div class="card-desc">'+a.desc+'</div>';
   }
@@ -293,6 +298,12 @@ window._toggleView=()=>{
 
 function attachEvents(){
   document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',()=>{state.filterSubject=b.dataset.subject;render()}));
+  document.querySelectorAll('.btn-usage-toggle').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.usage;
+    const content=document.getElementById('usage-'+id);
+    if(content.style.display==='none'){content.style.display='block';b.classList.add('open');b.textContent='📋 הנחיות שימוש ▴'}
+    else{content.style.display='none';b.classList.remove('open');b.textContent='📋 הנחיות שימוש ▾'}
+  }));
   document.querySelectorAll('.btn-take').forEach(b=>b.addEventListener('click',async()=>{
     const id=b.dataset.id;
     const a=state.apps.find(x=>x.id===id);if(!a)return;
