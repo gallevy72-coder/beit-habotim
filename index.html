@@ -132,6 +132,17 @@ body{font-family:'Heebo',sans-serif;background:var(--bg-primary);color:var(--tex
 .btn-reject:hover{background:#FEF2F2}
 .btn-delete{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;font-size:14px;transition:all .2s}
 .btn-delete:hover{background:#FEF2F2;border-color:#FCA5A5}
+.btn-edit{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;font-size:14px;transition:all .2s}
+.btn-edit:hover{background:rgba(107,92,231,0.05);border-color:var(--purple-light)}
+.edit-form{padding:24px}
+.edit-form .form-group{margin-bottom:14px}
+.edit-form .form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+.edit-form .form-group input,.edit-form .form-group textarea,.edit-form .form-group select{width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-family:'Heebo',sans-serif;font-size:14px;color:var(--text-primary);background:var(--bg-primary);direction:rtl}
+.edit-form .form-group input:focus,.edit-form .form-group textarea:focus,.edit-form .form-group select:focus{outline:none;border-color:#8B7CF6;background:#fff;box-shadow:0 0 0 3px rgba(107,92,231,0.1)}
+.edit-form .form-group textarea{min-height:60px;resize:vertical}
+.edit-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.edit-form .btn-save{padding:10px 24px;border-radius:var(--radius-sm);border:none;background:var(--grad-btn);color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-left:8px}
+.edit-form .btn-save:hover{background:var(--grad-btn-hover)}
 .loading{text-align:center;padding:60px;color:var(--text-light);font-size:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--grad-header);color:#fff;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:500;box-shadow:0 8px 32px rgba(30,27,75,0.25);z-index:300;transition:transform .35s cubic-bezier(.4,0,.2,1);pointer-events:none;border:1px solid rgba(255,255,255,0.1)}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -266,7 +277,7 @@ function renderAdmin(){
   if(pending.length>0){
     pendingHTML='<div class="pending-section"><h3>⏳ ממתינים לאישור <span class="pending-count">'+pending.length+'</span></h3>'+pending.map(a=>'<div class="pending-card"><div class="pending-icon">'+a.icon+'</div><div class="pending-info"><div class="pending-name">'+a.name+'</div><div class="pending-meta">מאת '+a.author+' · '+(a.age||'')+' · '+(a.subject||'')+(a.email?' · '+a.email:'')+'</div><div class="pending-desc">'+a.desc+'</div><a class="pending-link" href="'+a.url+'" target="_blank">'+a.url+'</a></div><div class="pending-actions"><button class="btn-approve" data-approve="'+a.id+'">✅ אישור</button><button class="btn-reject" data-reject="'+a.id+'">❌ דחייה</button></div></div>').join('')+'</div>';
   }
-  return '<div class="admin-panel"><h2>📊 דשבורד מנהל — בית הבוטים</h2>'+pendingHTML+'<h3 style="font-family:Rubik,sans-serif;font-size:18px;margin-bottom:16px">📋 כלים מאושרים ('+approved.length+')</h3><table class="admin-table"><thead><tr><th>#</th><th>שם הכלי</th><th>תחום</th><th>גיל</th><th>לקיחות</th><th>הערות</th><th>פעולות</th></tr></thead><tbody>'+approved.map((a,i)=>'<tr><td>'+(i+1)+'</td><td><strong>'+a.icon+' '+a.name+'</strong><br><span style="color:var(--text-light);font-size:12px">'+a.author+'</span></td><td>'+(a.subject||'')+'</td><td>'+(a.age||'')+'</td><td><span class="count-badge takes">'+(a.takes||0)+'</span></td><td><span class="count-badge comments">'+(a.comments?a.comments.length:0)+'</span></td><td><button class="btn-delete" data-delete="'+a.id+'">🗑️</button></td></tr>').join('')+'</tbody></table></div>';
+  return '<div class="admin-panel"><h2>📊 דשבורד מנהל — בית הבוטים</h2>'+pendingHTML+'<h3 style="font-family:Rubik,sans-serif;font-size:18px;margin-bottom:16px">📋 כלים מאושרים ('+approved.length+')</h3><table class="admin-table"><thead><tr><th>#</th><th>שם הכלי</th><th>תחום</th><th>גיל</th><th>לקיחות</th><th>הערות</th><th>פעולות</th></tr></thead><tbody>'+approved.map((a,i)=>'<tr><td>'+(i+1)+'</td><td><strong>'+a.icon+' '+a.name+'</strong><br><span style="color:var(--text-light);font-size:12px">'+a.author+'</span></td><td>'+(a.subject||'')+'</td><td>'+(a.age||'')+'</td><td><span class="count-badge takes">'+(a.takes||0)+'</span></td><td><span class="count-badge comments">'+(a.comments?a.comments.length:0)+'</span></td><td><button class="btn-edit" data-edit="'+a.id+'">✏️</button> <button class="btn-delete" data-delete="'+a.id+'">🗑️</button></td></tr>').join('')+'</tbody></table></div>';
 }
 
 function renderModal(){
@@ -280,6 +291,15 @@ function renderModal(){
     const commentsHTML=comments.length>0?'<div class="comments-list">'+comments.map(c=>'<div class="comment-item"><div class="comment-header"><span class="comment-author">'+c.author+'</span><span class="comment-date">'+c.date+'</span></div><div class="comment-text">'+c.text+'</div></div>').join('')+'</div>':'<div class="empty-state">אין עדיין הערות</div>';
     const formHTML=state.user?'<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)"><div class="form-group"><label>הערה חדשה</label><textarea id="comment-text" placeholder="שתפ/י את החוויה שלך..."></textarea></div><button class="btn-submit" data-addcomment="'+a.id+'">שלח הערה</button></div>':'<div style="margin-top:16px;padding:20px;background:rgba(107,92,231,0.04);border-radius:var(--radius-sm);text-align:center;font-size:14px;color:var(--text-secondary);border:1px solid rgba(107,92,231,0.1)">צריך להתחבר כדי להשאיר הערה<br><button class="btn-submit" style="max-width:200px;margin:12px auto 0" onclick="window._closeModal();window._openLogin();">כניסה</button></div>';
     return '<div class="modal-overlay" onclick="window._closeOverlay(event)"><div class="modal"><div class="modal-header"><h2>'+a.icon+' '+a.name+' — הערות</h2><button class="modal-close" onclick="window._closeModal()">✕</button></div><div class="modal-body">'+commentsHTML+formHTML+'</div></div></div>';
+  }
+  if(state.modal.type==='edit'){
+    const a=state.apps.find(x=>x.id===state.modal.appId);
+    if(!a)return'';
+    const ageOptions=['גן','יסודי','יסודי-חט״ב','חט״ב','חט״ב-תיכון','תיכון','כל הגילאים'];
+    const subjectOptions=['מתמטיקה','עברית','אנגלית','תנ״ך','מדעים','היסטוריה','מדעי המחשב','חינוך חברתי','אומנות','בין-תחומי','אחר'];
+    const ageSelect=ageOptions.map(o=>'<option value="'+o+'"'+(o===(a.age||'')?'selected':'')+'>'+o+'</option>').join('');
+    const subjectSelect=subjectOptions.map(o=>'<option value="'+o+'"'+(o===(a.subject||'')?'selected':'')+'>'+o+'</option>').join('');
+    return '<div class="modal-overlay" onclick="window._closeOverlay(event)"><div class="modal"><div class="modal-header"><h2>✏️ עריכת כלי</h2><button class="modal-close" onclick="window._closeModal()">✕</button></div><div class="edit-form"><div class="form-group"><label>שם הכלי</label><input type="text" id="edit-name" value="'+(a.name||'').replace(/"/g,'&quot;')+'"></div><div class="form-group"><label>מטרה</label><textarea id="edit-purpose">'+(a.purpose||a.desc||'')+'</textarea></div><div class="form-group"><label>הנחיות שימוש</label><textarea id="edit-usage">'+(a.usage||'')+'</textarea></div><div class="form-group"><label>קישור</label><input type="url" id="edit-url" value="'+(a.url||'').replace(/"/g,'&quot;')+'" dir="ltr" style="text-align:left"></div><div class="form-row"><div class="form-group"><label>גיל יעד</label><select id="edit-age">'+ageSelect+'</select></div><div class="form-group"><label>תחום דעת</label><select id="edit-subject">'+subjectSelect+'</select></div></div><div class="form-group"><label>אייקון</label><input type="text" id="edit-icon" value="'+(a.icon||'')+'" style="font-size:24px;width:60px;text-align:center"></div><div class="form-group"><label>תמונה (URL)</label><input type="url" id="edit-image" value="'+(a.image||'').replace(/"/g,'&quot;')+'" dir="ltr" style="text-align:left"></div><button class="btn-save" data-saveedit="'+a.id+'">💾 שמירה</button></div></div></div>';
   }
   return'';
 }
@@ -353,6 +373,26 @@ function attachEvents(){
     await deleteDoc(doc(db,'apps',id));
     state.apps=state.apps.filter(x=>x.id!==id);
     render();showToast('🗑️ הכלי נמחק')
+  }));
+  document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
+    state.modal={type:'edit',appId:b.dataset.edit};render();
+  }));
+  document.querySelectorAll('[data-saveedit]').forEach(b=>b.addEventListener('click',async()=>{
+    const id=b.dataset.saveedit;
+    const updates={
+      name:document.getElementById('edit-name')?.value.trim()||'',
+      purpose:document.getElementById('edit-purpose')?.value.trim()||'',
+      usage:document.getElementById('edit-usage')?.value.trim()||'',
+      url:document.getElementById('edit-url')?.value.trim()||'',
+      age:document.getElementById('edit-age')?.value||'',
+      subject:document.getElementById('edit-subject')?.value||'',
+      icon:document.getElementById('edit-icon')?.value.trim()||'🤖',
+      image:document.getElementById('edit-image')?.value.trim()||''
+    };
+    await updateDoc(doc(db,'apps',id),updates);
+    const a=state.apps.find(x=>x.id===id);
+    if(a)Object.assign(a,updates);
+    state.modal=null;render();showToast('✏️ הכלי עודכן!')
   }));
 }
 
