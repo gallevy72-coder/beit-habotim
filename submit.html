@@ -376,6 +376,7 @@ window.submitForm=async function(){
   if(!email){showToast('נא להזין מייל');return}
   if(!age){showToast('נא לבחור גיל יעד');return}
   if(!subject){showToast('נא לבחור תחום דעת');return}
+  if(!imageUrl){showToast('נא להעלות תמונה של הכלי');return}
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.textContent='שולח...';
   try{
