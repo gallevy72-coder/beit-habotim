@@ -241,7 +241,7 @@ function renderHeader(){
   const u=state.user
     ?'<div class="user-badge"><div class="avatar">'+state.user.name.charAt(0)+'</div><span>'+state.user.name+'</span><button class="btn-logout" onclick="window._logout()">יציאה</button></div>'
     :'<button class="btn-login" onclick="window._openLogin()">כניסה / הרשמה</button>';
-  return '<header class="header"><div class="header-inner"><div class="logo"><span class="hamagber-text">המגבר</span><div class="logo-icon">🏠</div><div><div class="logo-text">בית הבוטים</div><div class="logo-sub">כלים חינוכיים שנבנו בידי מורים</div></div></div><div class="header-actions"><a href="/submit.html" class="btn-submit-link">📬 הגשת כלי חדש</a>'+u+'</div></div></header><div class="site-footer"><button class="btn-admin" onclick="window._toggleView()">'+(state.view==='admin'?'📋 חזרה לקטלוג':'📊 דשבורד')+'</button></div>'+(state.modal?renderModal():'');
+  return '<header class="header"><div class="header-inner"><div class="logo"><span class="hamagber-text">המגבר</span><div class="logo-icon">🏠</div><div><div class="logo-text">בית הבוטים</div><div class="logo-sub">כלים חינוכיים שנבנו בידי מורים</div></div></div><div class="header-actions"><a href="submit.html" class="btn-submit-link">📬 הגשת כלי חדש</a>'+u+'</div></div></header><div class="site-footer"><button class="btn-admin" onclick="window._toggleView()">'+(state.view==='admin'?'📋 חזרה לקטלוג':'📊 דשבורד')+'</button></div>'+(state.modal?renderModal():'');
 }
 
 function renderCatalog(){
